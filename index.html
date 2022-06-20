@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Billing using Angular Js</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="title" content="invoice">
+<meta name="author" content="Devansh">
+<!-- Fontawesome -->
+<link type="text/css" href="./vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+
+<!-- Pixel CSS -->
+<link type="text/css" href="./css/neumorphism.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+</head>
+
+<body>
+    <div ng-app="invoice" class="container">
+        <section class="jumbotron">
+            <h1>Invoice System With GST Calculation </h1>
+            <p>Enter/Edit product details for final Billing.</p> 
+          </section>
+        <section class="row">
+          <label for="TextInput">Name :</label>
+          <input type="text" class="form-control" placeholder="Enter name here">
+        </section>
+        <section class="row justify-content-start">
+         <div class="col-md-8">
+            <label for="TextInput">Place :</label>
+           <input type="text" class="form-control" placeholder="Enter Place here">
+          </div>      
+          <div class="col-md-4">
+            <label class="h6" for="exampleInputDate1">Date :</label>
+                    <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><span class="far fa-calendar-alt"></span></span>
+                        </div>
+                        <input class="form-control datepicker" id="exampleInputDate1" placeholder="Select date" type="text" aria-label="Date with icon left">
+                    </div>
+          </div>
+        </section>
+        <br>  
+    <section class="row" ng-controller="InvoiceController">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Total</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in invoice.items">
+              <td><input type="text" ng-model="item.name" class="form-control" /></td>
+              <td><input type="text" ng-model="item.description" class="form-control" /></td>
+              <td><input type="number" ng-model="item.qty" class="form-control" /></td>
+              <td><input type="number" ng-model="item.price" class="form-control" /></td>
+              <td>{{item.qty * item.price}}₹</td>
+              <td><button type="button" class="btn btn-warning" ng-click="remove($index)">Delete</button></td>
+            </tr>
+            <tr>
+            <td><button type="button" class="btn btn-primary" ng-click="add()">Add item</button></td>
+              <td></td>
+              <td></td>
+              <td>Total : </td>
+              <td>{{total()}}₹</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>GST: </td>
+              <td>{{total()? (total()/11 | number: 2) : 0}}₹</td>
+            </tr>
+            <br>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Grand Total :</td>
+              <td>{{gt()}}₹</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+<!-- Core -->
+<script>
+    var invoice = angular.module('invoice', []);
+invoice.controller('InvoiceController', function($scope){
+  $scope.invoice = {
+    items: [{
+      name: 'T-shirt',
+      description: 'Thi-3517',
+      qty: 0,
+      price: 0,
+    }]
+  };
+  $scope.add = function(){
+    $scope.invoice.items.push({
+      name: '',
+      description: '',
+      qty: 1,
+      price: 0
+    });
+  },
+    $scope.remove = function(index){
+    $scope.invoice.items.splice(index, 1);
+  },
+    $scope.total = function(){
+    var total = 0;
+    angular.forEach($scope.invoice.items, function(item){
+      total += item.qty * item.price;
+    })
+    return total;
+  },
+   $scope.gt = function(){
+    var tot = $scope.total();
+    tot = tot.toFixed(2);
+    gst = tot? (tot/11) : 0;
+    gst = gst.toFixed(2);
+    gt = tot - (-gst);
+    return gt;
+  }
+});
+</script>
+<script src="./vendor/jquery/dist/jquery.min.js"></script>
+<script src="./vendor/popper.js/dist/umd/popper.min.js"></script>
+<script src="./vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="./vendor/headroom.js/dist/headroom.min.js"></script>
+
+<!-- Vendor JS -->
+<script src="./vendor/onscreen/dist/on-screen.umd.min.js"></script>
+<script src="./vendor/nouislider/distribute/nouislider.min.js"></script>
+<script src="./vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="./vendor/waypoints/lib/jquery.waypoints.min.js"></script>
+<script src="./vendor/jarallax/dist/jarallax.min.js"></script>
+<script src="./vendor/jquery.counterup/jquery.counterup.min.js"></script>
+<script src="./vendor/jquery-countdown/dist/jquery.countdown.min.js"></script>
+<script src="./vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
+<script src="./vendor/prismjs/prism.js"></script>
+</body>
+
+</html>
